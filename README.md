@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # LearnPlaywright3x — JavaScript Fundamentals & Automation Learning Repo
 
 A learning repository tracking JavaScript fundamentals from first principles, alongside RICE-prompt notes for automation framework generation and a growing `IQ_Notes` reference library (interview-style concept explainers).
@@ -2649,3 +2650,5 @@ Concept explainers, generated on demand via the prompt template in [`IQ_Notes/RE
 ---
 
 > **TL;DR:** This repo is a from-scratch JavaScript fundamentals course (`console.log` → scoping → identifiers → literals/numbers → operators → conditionals → switch statements → user input → loops → arrays: create, search, iterate, transform, sort, slice, combine, check, copy, destructure → functions: the four types, expressions, arrows, IIFE, spread/rest, `return`, `var`/`let`/`const`, hoisting, TDZ → scope & closures: scope chain, private state, retry trackers → strings: quotes, template literals, character access, searching, extraction, transformation, splitting, joining, conversion → objects: literals, property access, mutation, nesting, methods, value vs reference) plus a `00_chaptet_GENAI` folder for LLM automation-framework prompting, an `MCQ` self-test bank, and an `IQ_Notes` library of standalone concept references anyone can regenerate with the same prompt template.
+=======
+>>>>>>> b54d8dd9c82a782d8020f6ae9e863f2f20832022
