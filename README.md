@@ -48,6 +48,24 @@ A learning repository tracking JavaScript fundamentals from first principles, al
 - [13 — Strings](#13--strings)
   - [13.1 — Properties & Character Access](#131--properties--character-access)
   - [13.2 — Searching & Checking](#132--searching--checking)
+  - [13.3 — Extracting Substrings](#133--extracting-substrings)
+  - [13.4 — Case, Whitespace, Replacement & Concatenation](#134--case-whitespace-replacement--concatenation)
+  - [13.5 — Splitting, Joining & Conversion](#135--splitting-joining--conversion)
+  - [13.6 — Complete String Cheatsheet](#136--complete-string-cheatsheet)
+- [14 — Objects](#14--objects)
+  - [14.1 — Property Access & Mutation](#141--property-access--mutation)
+  - [14.2 — Nested Objects & Methods](#142--nested-objects--methods)
+  - [14.3 — Value vs Reference](#143--value-vs-reference)
+- [15 — Multi-Dimensional Arrays](#15--multi-dimensional-arrays)
+  - [15.1 — Star Patterns](#151--star-patterns)
+- [16 — Callbacks](#16--callbacks)
+  - [16.1 — Sync vs Async Callbacks](#161--sync-vs-async-callbacks)
+  - [16.2 — Callback Hell](#162--callback-hell)
+- [17 — Promises](#17--promises)
+  - [17.1 — then / catch / finally](#171--then--catch--finally)
+  - [17.2 — Chaining Promises](#172--chaining-promises)
+  - [17.3 — all / allSettled / race](#173--all--allsettled--race)
+- [18 — Async / Await](#18--async--await)
 - [MCQ — Practice Questions](#mcq--practice-questions)
 - [IQ_Notes — Reference Library](#iq_notes--reference-library)
 
@@ -186,7 +204,48 @@ LearnPlaywright3x/
 ├── 13_String/
 │   ├── 109_String.js                        # quotes, template literals, multiline, String()
 │   ├── 110_String_Fn.js                     # length, index, .at(), charAt, charCodeAt
-│   └── 111.Str_Searching.js                 # includes, startsWith/endsWith, indexOf
+│   ├── 111.Str_Searching.js                 # includes, startsWith/endsWith, indexOf
+│   ├── 112_Extraction_String.js             # slice, substring, negative indexes, .at()
+│   ├── 113_String_More.js                   # case, trim, replace, concat
+│   ├── 114_Extra.js                         # regex replacement, split, join
+│   ├── 115_Fn_String_Conversion.js          # String/Number conversion and immutability
+│   └── String_Cheatsheet.md                 # complete SDET-focused string reference
+├── 14_Objects/
+│   ├── 116_Objects.js                       # literals, key access, reference equality
+│   ├── 117_Object_Person.js                 # deeply nested object with methods
+│   ├── 118_Object.js                        # object method and this
+│   ├── 119_Objects.js                       # access, add, and update properties
+│   ├── 120_Config.js                        # dynamic config properties and delete
+│   └── 121_CallBy_Ref_CallByValue.js        # primitive copies vs object references
+├── 15_Multi_Dimensions_Array/
+│   ├── 122_Array.js                         # 1D vs 2D arrays, nested-loop grid print
+│   ├── 124_Array_Fn.js                      # map/reduce over rows, real suite results
+│   ├── 125_Right_Pattern.js                 # right-triangle star pattern
+│   ├── 126_Left_Hand.js                     # inverted (left-hand) star pattern
+│   └── 127_Pyramid_Pattern.js               # centered pyramid pattern
+├── 16_Callback/
+│   ├── 128_Callback.js                      # callback as arg — 3 ways to pass (named/anon/arrow)
+│   ├── 129_Callback.js                      # async test callback signature
+│   ├── 130_Sync_Callback.js                 # synchronous forEach callback
+│   ├── 131_Async_Callback.js                # setTimeout — async callback ordering
+│   ├── 132_CallbackHell.js                  # nested login-flow callbacks (the "hell")
+│   ├── 133_Call_RealHello.js                # deep nested error-first callback chain
+│   ├── 134_Call_Return.js                   # callback returning a value
+│   └── 135_Pyramid_DOM.js                   # nested DOM-step callback pyramid
+├── 17_Promise/
+│   ├── 136_Promise.js                       # new Promise, resolve/reject states
+│   ├── 137_REAL_Promise_API.js              # .then on a resolved promise
+│   ├── 138_REAL_Promise_API.js              # .catch on a rejected promise
+│   ├── 139_Promise_Finally.js               # .finally always runs
+│   ├── 140_Promise_REAL.js                  # promise chaining for a login flow
+│   ├── 141_Promise.All.js                   # Promise.all — all-or-fail
+│   ├── 142_Promise_Settle.js                # Promise.allSettled — report every test
+│   ├── 143.Promise.race.js                  # Promise.race — first to settle wins
+│   ├── 144_Promise.IQ.js                    # promise state quiz questions
+│   └── 145.IQ.js                            # all/allSettled quiz questions
+├── 18_Async_Await/
+│   ├── 146.js                               # .then chain vs async/await shape
+│   └── 147_BetterWay.js                     # async/await login flow (the "better way")
 ├── MCQ/
 │   └── Array_MCQ.md                         # array practice multiple-choice questions
 └── IQ_Notes/
@@ -2029,6 +2088,539 @@ if (url.includes("staging")) {
 
 ---
 
+#### 13.3 — Extracting Substrings
+
+**Concept:** `slice(start, end)` and `substring(start, end)` extract part of a string without changing the original. The `end` index is excluded; `slice` supports negative indexes, while `substring` treats negative values as `0`.
+
+**Why:** Test names, generated IDs, URLs, and filenames often contain multiple pieces of information inside one string. Extraction lets a test isolate the exact part it needs.
+
+**Q&A — why use this?**
+- **Q: Which method should I prefer?** A: Use `slice` for predictable start/end behavior and negative indexes.
+- **Q: How do I take the last three characters?** A: `str.slice(-3)`.
+- **Q: Is the end index included?** A: No. `slice(0, 5)` reads indexes `0` through `4`.
+- **Q: What is `.at()` for?** A: Reading one character, including from the end with a negative index such as `.at(-1)`.
+
+```js
+let str = "Login_Test_Pass_001";
+
+console.log(str.slice(0, 5));  // "Login"
+console.log(str.slice(11));    // "Pass_001"
+console.log(str.slice(-3));    // "001"
+
+console.log(str.substring(6, 10)); // "Test"
+console.log(str.at(0));             // "L"
+console.log(str.at(-1));            // "1"
+```
+
+| Method | Negative indexes | End index | Best use |
+|--------|:----------------:|:---------:|----------|
+| `slice(start, end)` | Yes | Excluded | General substring extraction |
+| `substring(start, end)` | No; clamps to `0` | Excluded | Legacy/simple non-negative ranges |
+| `at(index)` | Yes | N/A | One character |
+
+---
+
+#### 13.4 — Case, Whitespace, Replacement & Concatenation
+
+**Concept:** Case and whitespace methods normalize text; replacement methods create edited copies; concatenation combines multiple strings. None of these mutate the original string.
+
+**Why:** UI text often contains inconsistent case or extra spaces, and assertion messages frequently need values inserted or sensitive text replaced before logging.
+
+**Q&A — why use this?**
+- **Q: Does `replace("FAIL", "PASS")` replace every match?** A: No, only the first. Use `replaceAll` or a global regular expression (`/FAIL/g`) for all matches.
+- **Q: Does `trim()` remove spaces inside the string?** A: No, only whitespace at both ends. `trimStart` and `trimEnd` handle one side.
+- **Q: What is the clearest way to combine values?** A: Template literals are usually best when variables or expressions are involved.
+
+```js
+let text = "  Hello, World!  ";
+
+console.log(text.toUpperCase()); // "  HELLO, WORLD!  "
+console.log(text.toLowerCase()); // "  hello, world!  "
+console.log(text.trim());        // "Hello, World!"
+
+let result = "Test: FAIL. Retry: FAIL.";
+console.log(result.replace("FAIL", "PASS"));    // first match only
+console.log(result.replaceAll("FAIL", "PASS")); // every match
+console.log(result.replace(/FAIL/g, "PASS"));    // every match with regex
+
+let greeting = `${"Hello"} ${"World"}`;
+console.log(greeting); // "Hello World"
+```
+
+---
+
+#### 13.5 — Splitting, Joining & Conversion
+
+**Concept:** `split` turns a string into an array; `join` turns an array into a string. `String` and `.toString()` convert values to text, while `Number`, `parseInt`, and `parseFloat` convert suitable text to numbers.
+
+**Why:** Test data commonly arrives as CSV-like text, URL segments, labels, or environment variables. Splitting and conversion turn that raw text into values the test can process.
+
+**Q&A — why use this?**
+- **Q: What does `"pass,fail".split(",")` return?** A: `["pass", "fail"]`, an array of two strings.
+- **Q: `Number("42px")` or `parseInt("42px", 10)`?** A: `Number` is strict and returns `NaN`; `parseInt` reads the leading integer and returns `42`.
+- **Q: Can I change one character with `str[0] = "H"`?** A: No. Strings are immutable; create and assign a new string instead.
+
+```js
+console.log("pass,fail,skip".split(",")); // ["pass", "fail", "skip"]
+console.log("hello".split(""));          // ["h", "e", "l", "l", "o"]
+
+let parts = ["2024", "03", "07"];
+console.log(parts.join("-"));            // "2024-03-07"
+
+console.log(String(200));                 // "200"
+console.log((200).toString());            // "200"
+console.log(Number("42"));               // 42
+console.log(parseInt("42px", 10));       // 42
+console.log(parseFloat("3.14rem"));       // 3.14
+
+let word = "hello";
+word[0] = "H";
+console.log(word);                        // "hello" — unchanged
+```
+
+---
+
+#### 13.6 — Complete String Cheatsheet
+
+[`13_String/String_Cheatsheet.md`](13_String/String_Cheatsheet.md) is the full SDET-focused reference for string properties and methods. It covers character access, searching, extraction, splitting, Unicode-safe handling, case and whitespace, padding, replacement, comparison, templates, conversion, and practical test-automation recipes.
+
+Use the lesson files for focused examples and the cheatsheet when you need to compare methods or review a gotcha quickly.
+
+---
+
+### 14 — Objects
+
+**Concept:** An object groups related values under named keys. Values can be primitives, arrays, nested objects, or functions (methods), which makes objects the natural shape for users, test data, API responses, and configuration.
+
+**Why:** Modern JavaScript automation is object-heavy: Playwright options, fixtures, page data, API payloads, and assertion results are all commonly represented as objects.
+
+**Q&A — why use this?**
+- **Q: Are object keys case-sensitive?** A: Yes. `status` and `Status` are different keys.
+- **Q: Are two identical-looking objects equal?** A: Not unless both variables point to the same object. `{ status: "pass" } === { status: "pass" }` is `false`.
+- **Q: Is an object literal with quoted keys JSON?** A: No. It is still a JavaScript object. JSON is a text format produced or read with `JSON.stringify` and `JSON.parse`.
+
+```js
+const test = {
+    name: "Login",
+    status: "pass",
+    retries: 2,
+    tags: ["smoke", "auth"]
+};
+
+console.log(test.name);      // "Login"
+console.log(test["status"]); // "pass"
+```
+
+---
+
+#### 14.1 — Property Access & Mutation
+
+**Concept:** Read known property names with dot notation and dynamic names with bracket notation. Objects are mutable, so properties can be added, updated, or deleted after creation—even when the variable itself was declared with `const`.
+
+**Why:** Runtime configuration and test data often start small and gain values such as a selected browser, timeout, token, or result during execution.
+
+**Q&A — why use this?**
+- **Q: Dot or bracket notation?** A: Use dots for fixed valid identifiers (`user.name`) and brackets for dynamic keys or names containing spaces (`user[key]`).
+- **Q: Can a `const` object change?** A: Its binding cannot point to another object, but its properties can still change.
+- **Q: What does `delete` do?** A: Removes a property from the object.
+
+```js
+const config = {};
+
+config.browser = "Chrome";       // add
+config.timeout = 3000;           // add
+config.timeout = 5000;           // update
+console.log(config["timeout"]);  // 5000
+
+delete config.browser;           // remove
+console.log(config);             // { timeout: 5000 }
+```
+
+---
+
+#### 14.2 — Nested Objects & Methods
+
+**Concept:** Objects can contain other objects and arrays to model structured data. A method is a function stored on an object; inside a regular method, `this` refers to the object used to call it.
+
+**Why:** A realistic user or API response is rarely flat. Nesting keeps related data together, while methods can derive useful values such as a display name or formatted address.
+
+**Q&A — why use this?**
+- **Q: How do I reach a nested value?** A: Chain property access, for example `user.address.city`.
+- **Q: How does a method read another property?** A: Use `this`, as in `return this.name`.
+- **Q: Can an object hold arrays of objects?** A: Yes; this is a common shape for API collections and histories.
+
+```js
+const user = {
+    name: "Pramod",
+    address: {
+        city: "Bengaluru",
+        country: "India"
+    },
+    skills: ["JavaScript", "Playwright", "API Testing"],
+    printName() {
+        return this.name;
+    }
+};
+
+console.log(user.address.city); // "Bengaluru"
+console.log(user.skills[1]);    // "Playwright"
+console.log(user.printName());  // "Pramod"
+```
+
+---
+
+#### 14.3 — Value vs Reference
+
+**Concept:** Assigning a primitive copies its value, so changing the second variable does not affect the first. Assigning an object copies the reference value, so both variables point to the same object and observe the same mutations.
+
+**Why:** Shared references can cause surprising test pollution when one test updates configuration or fixture data that another test also uses.
+
+**Q&A — why use this?**
+- **Q: Does JavaScript pass objects "by reference"?** A: JavaScript passes everything by value; for objects, that value is a reference to the object.
+- **Q: Why is `{} === {}` false?** A: Each literal creates a different object at a different identity.
+- **Q: How do I avoid shared top-level mutations?** A: Make a shallow copy with `{ ...original }`; nested objects still need deliberate deep copying when they will also be changed.
+
+```js
+let firstNumber = 10;
+let secondNumber = firstNumber;
+secondNumber = 99;
+console.log(firstNumber); // 10 — independent primitive value
+
+let firstObject = { value: 10 };
+let secondObject = firstObject;
+secondObject.value = 99;
+console.log(firstObject.value); // 99 — same object
+
+let left = { status: "pass" };
+let right = { status: "pass" };
+console.log(left === right);    // false — different objects
+```
+
+---
+
+### 15 — Multi-Dimensional Arrays
+
+**Concept:** A multi-dimensional array is an array whose elements are themselves arrays, most commonly a 2D array that reads like a table of rows and columns. You reach a cell with two indexes — `grid[row][column]`.
+
+**Why:** Real test data is naturally tabular: a matrix of test results, a grid of students and scores, or an HTML table flattened into rows of cells. Nested loops are the standard way to walk every cell.
+
+**Q&A — why use this?**
+- **Q: What is the shape of a 2D array?** A: An outer array of rows, where each row is itself an array. `matrix[0]` is the first row, `matrix[0][1]` is its second cell.
+- **Q: How do I visit every cell?** A: A `for` loop for rows, and inside it a `for` loop for columns — `grid[i][j]`.
+- **Q: Does each row need the same length?** A: No. JavaScript does not enforce rectangular shape; ragged arrays are legal but often buggy when you assume equal length.
+
+```js
+let matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+
+console.log(matrix[1][2]); // 6 — row 1, column 2
+
+for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+        process.stdout.write(matrix[i][j] + " ");
+    }
+    console.log(""); // newline after each row
+}
+```
+
+```mermaid
+flowchart TD
+    A[2D array = array of arrays] --> B[Outer loop: rows]
+    B --> C[Inner loop: columns]
+    C --> D["matrix[row][col]"]
+    D --> E[Process cell]
+```
+
+---
+
+#### 15.1 — Star Patterns
+
+**Concept:** Star patterns are a warm-up for nested loops. The outer loop controls the number of lines, and one or more inner loops control spaces and stars on each line to build right triangles, inverted triangles, and centered pyramids.
+
+**Why:** These exercises train the exact loop-and-index thinking needed to walk 2D arrays and generate test fixtures. A pyramid in particular forces you to reason about both leading spaces and an odd star count per row.
+
+**Q&A — why use this?**
+- **Q: How do I print without a trailing newline?** A: Use `process.stdout.write("*")` for stars and `console.log("")` only at the end of each row.
+- **Q: Why does the pyramid use `2 * i - 1` stars?** A: Row 1 needs 1 star, row 2 needs 3, row 3 needs 5 — an odd-number sequence, which `2*i - 1` generates.
+- **Q: How do I center a row?** A: Pad the left with `n - i` spaces before printing the `2*i - 1` stars.
+
+```js
+let n = 3;
+for (let i = 1; i <= n; i++) {
+    let row = "";
+    for (let j = 1; j <= n - i; j++) row += " "; // leading spaces
+    for (let j = 1; j <= 2 * i - 1; j++) row += "*"; // stars
+    console.log(row);
+}
+//   *
+//  ***
+// *****
+```
+
+---
+
+### 16 — Callbacks
+
+**Concept:** A callback is a function you pass as an argument to another function, so the receiver can "call you back" later. JavaScript lets you pass it three ways: a named function, an anonymous function, or an arrow function — all equivalent.
+
+**Why:** Callbacks are how JavaScript signals "this finished" without blocking the thread. They are the foundation of asynchronous code and the first version of how test runners and APIs hand results back to your code.
+
+**Q&A — why use this?**
+- **Q: When is a callback called?** A: Whenever the receiving function decides — immediately (sync) or after some work finishes (async), such as a timer or network response.
+- **Q: Are the three ways to pass it different?** A: Behaviorally no; named, anonymous, and arrow all produce a function. The arrow is shortest and does not rebind `this`.
+- **Q: What is the "error-first" convention?** A: A Node-style callback takes `(error, result)`; you check `error` first and `return` early if it exists.
+
+```js
+function placeOrder(item, callback) {
+    console.log("Order placed:", item);
+    callback(); // call back later
+}
+
+// Named
+function print() { console.log("Done with the order"); }
+placeOrder("Burger", print);
+
+// Anonymous
+placeOrder("Burger", function () {
+    console.log("Order is ready, pick it up!");
+});
+
+// Arrow
+placeOrder("Burger", () => console.log("Arrow fn — no name"));
+```
+
+```mermaid
+flowchart LR
+    A[Call placeOrder] --> B["Runs body, calls callback()"]
+    B --> C[Callback executes]
+    C --> D["Control returns to placeOrder"]
+```
+
+---
+
+#### 16.1 — Sync vs Async Callbacks
+
+**Concept:** A synchronous callback runs immediately, inside the current call stack, before the next line. An asynchronous callback (like `setTimeout`) is handed to the browser/Node event loop and runs only after the current synchronous code finishes.
+
+**Why:** Knowing the difference explains a classic automation trap — a line that logs "all done" prints *before* an asynchronous API response arrives, so you cannot rely on the order you read the code.
+
+**Q&A — why use this?**
+- **Q: Which is synchronous here?** A: `Array.forEach(callback)` — it iterates all items and finishes before moving on.
+- **Q: Which is asynchronous?** A: `setTimeout(callback, ms)` — it registers the callback and returns immediately; the callback runs later.
+- **Q: What is the gotcha?** A: Code after an async call does not wait for it. "Moving to next" logs before "API response received".
+
+```js
+console.log("Test 1: started");
+
+setTimeout(function () {
+    console.log("Test 2: API response received!"); // runs LAST
+}, 5000);
+
+console.log("Test 3: moving to next"); // runs before the timeout fires
+```
+
+---
+
+#### 16.2 — Callback Hell
+
+**Concept:** When each async step is nested inside the previous step's callback, the code indents further right with every step — a staircase of `})` closers that is hard to read, maintain, and error-check.
+
+**Why:** A real E2E flow (open browser → go to login → enter credentials → click login) chains several steps. Nesting them as callbacks produces the "pyramid of doom", which is the exact problem Promises and async/await were invented to solve.
+
+**Q&A — why use this?**
+- **Q: What does callback hell look like?** A: Each step's callback wraps the next, so the deepest code is indented many levels and ends in a wall of `})`.
+- **Q: Why is it a problem for testers?** A: Adding error handling to each level multiplies the noise, and tracing which level failed is painful.
+- **Q: What replaces it?** A: Promises flatten the nesting into a chain, and async/await makes it read like straight-line code.
+
+```js
+openBrowser(function () {
+    goToLoginPage(function () {
+        enterCredentials(function () {
+            clickLogin(function () {
+                console.log("Test is Complete!"); // deeply nested
+            });
+        });
+    });
+});
+```
+
+```mermaid
+flowchart TD
+    A[openBrowser] --> B[goToLoginPage]
+    B --> C[enterCredentials]
+    C --> D[clickLogin]
+    D --> E[Complete]
+    style A fill:#fff4e6,stroke:#d48a00
+    style E fill:#e6f4ea,stroke:#1a7f37
+```
+
+---
+
+### 17 — Promises
+
+**Concept:** A Promise is an object representing the eventual result of an async operation. It starts *pending* and settles once — either *fulfilled* (resolved) with a value or *rejected* with an error — and handlers react to whichever state it reaches.
+
+**Why:** Promises replace callback nesting with a flat chain, give a single place to catch errors (`.catch`), and come with combinators (`Promise.all`, `allSettled`, `race`) that mirror real test-orchestration needs.
+
+**Q&A — why use this?**
+- **Q: What are the three states?** A: `pending` (in flight), `fulfilled` (resolved), and `rejected` (failed). A promise settles exactly once.
+- **Q: How do I build one?** A: `new Promise((resolve, reject) => { ... })` — call `resolve(value)` on success or `reject(error)` on failure.
+- **Q: How do I consume one?** A: `.then(success)` for the fulfilled value, `.catch(error)` for rejection, and `.finally(cleanup)` that runs either way.
+
+```js
+let order = new Promise(function (resolve, reject) {
+    let foodReady = false;
+    if (foodReady) resolve("Pizza is delivered!");
+    else reject("Order cancelled");
+});
+
+order
+    .then(function (msg) { console.log("Success:", msg); })
+    .catch(function (err) { console.log("Failed:", err); })
+    .finally(function () { console.log("Cleanup"); });
+```
+
+```mermaid
+flowchart TD
+    P[new Promise] --> Q{Operation}
+    Q -->|success| R[resolve → fulfilled]
+    Q -->|failure| J[reject → rejected]
+    R --> T[.then]
+    J --> C[.catch]
+    T --> F[.finally]
+    C --> F
+```
+
+---
+
+#### 17.1 — then / catch / finally
+
+**Concept:** `.then` handles a fulfilled promise, `.catch` handles a rejected one, and `.finally` runs cleanup in both cases. When a promise rejects, its `.then` is skipped entirely and control jumps straight to `.catch`.
+
+**Why:** These three methods map one-to-one to test assertions: run the action (`.then`), handle the failure (`.catch`), and always clean up state like a browser or a fixture (`.finally`).
+
+**Q&A — why use this?**
+- **Q: Does `.then` run on rejection?** A: No. A rejected promise skips `.then` and goes to the next `.catch`.
+- **Q: Does `.finally` receive the value or error?** A: No. It takes no argument and cannot change the outcome; it just runs.
+- **Q: Can I chain `.finally` after `.catch`?** A: Yes — `.then().catch().finally()` is the standard shape.
+
+```js
+let apiCall = new Promise(function (resolve, reject) {
+    reject("500 Error");
+});
+
+apiCall
+    .then(function (data) { console.log("Data is success!!"); }) // skipped
+    .catch(function (error) { console.log(error); });             // "500 Error"
+```
+
+---
+
+#### 17.2 — Chaining Promises
+
+**Concept:** Returning a new promise from inside a `.then` lets the next `.then` wait for it, producing a flat sequence of steps. Each step's message flows to the next, and a single `.catch` at the end handles a failure anywhere in the chain.
+
+**Why:** This is the promise version of a multi-step E2E flow — the same login sequence that callback hell nested four levels deep becomes four flat `.then` calls, far easier to read and extend.
+
+**Q&A — why use this?**
+- **Q: What makes chaining work?** A: Each `.then` returns a promise; if its callback returns a promise, the next `.then` waits for it.
+- **Q: Where does one error handler go?** A: A single `.catch` at the end of the chain catches a rejection from any earlier step.
+- **Q: What does the final `.finally` do?** A: Runs once the chain settles, for teardown like closing the browser.
+
+```js
+openBrowser()
+    .then(function (msg) { console.log("Step 1:", msg); return goToLogin(); })
+    .then(function (msg) { console.log("Step 2:", msg); return enterCredentials(); })
+    .then(function (msg) { console.log("Step 3:", msg); return clickLogin(); })
+    .then(function (msg) { console.log("Step 4:", msg); })
+    .catch(function (error) { console.log("Error:", error); })
+    .finally(function () { console.log("Done execution!"); });
+```
+
+---
+
+#### 17.3 — all / allSettled / race
+
+**Concept:** `Promise.all` resolves only if *every* promise fulfills, or rejects on the first failure. `Promise.allSettled` waits for *all* to settle and reports each outcome. `Promise.race` settles with whichever promise settles first.
+
+**Why:** These three are the QA toolkit for running groups of checks: `all` for "all must pass", `allSettled` for "give me a full report even with failures", and `race` for "use the fastest server/response".
+
+**Q&A — why use this?**
+- **Q: Which stops at the first failure?** A: `Promise.all` rejects immediately on the first rejection; `allSettled` never short-circuits.
+- **Q: What does `allSettled` return?** A: An array of `{ status: "fulfilled"|"rejected", value|reason }` — one entry per input, in order.
+- **Q: When is `race` useful?** A: Timeouts and failover — respond to whichever server or operation completes first.
+
+```js
+Promise.all([
+    Promise.resolve("OK"),
+    Promise.reject("DB DOWN"),
+    Promise.resolve("OK")
+])
+    .then(function (r) { console.log(r); })
+    .catch(function (err) { console.log("Failed:", err); }); // "Failed: DB DOWN"
+
+Promise.allSettled([
+    Promise.resolve("Test A Passed!"),
+    Promise.reject("Test B failed"),
+    Promise.resolve("Test C passed")
+]).then(function (results) {
+    results.forEach(function (r, i) {
+        console.log("Test " + (i + 1) + ":", r.status, "-", r.value || r.reason);
+    });
+});
+```
+
+| Method | Settles when | Fails on first rejection? |
+|:-------|:-------------|:-------------------------:|
+| `Promise.all` | all fulfill | Yes |
+| `Promise.allSettled` | all settle | No |
+| `Promise.race` | first settles | Only if that one rejects |
+
+---
+
+### 18 — Async / Await
+
+**Concept:** `async` marks a function that returns a promise; inside it, `await` pauses the function until a promise settles and yields its resolved value. The result reads like ordinary top-to-bottom code instead of a chain of `.then` callbacks.
+
+**Why:** Async/await is the modern replacement for promise chains — the same login flow becomes straight-line statements with `await`, which is far easier to read, debug, and wrap in a `try/catch`.
+
+**Q&A — why use this?**
+- **Q: What does `async` guarantee?** A: The function always returns a promise, even if it returns a plain value.
+- **Q: What does `await` require?** A: It can only be used inside an `async` function, and it waits for the promise on its right.
+- **Q: How do I handle errors?** A: Wrap the awaited calls in `try/catch`, or call the async function and attach `.catch` to its returned promise.
+
+```js
+async function runLoginFlow() {
+    let msg1 = await openBrowser();
+    console.log("Step 1:", msg1);
+
+    let msg2 = await goToLogin();
+    console.log("Step 2:", msg2);
+
+    let msg3 = await enterCredentials();
+    console.log("Step 3:", msg3);
+
+    let msg4 = await clickLogin();
+    console.log("Step 4:", msg4);
+}
+
+runLoginFlow();
+```
+
+```mermaid
+flowchart TD
+    A[async function] --> B["await openBrowser()"]
+    B --> C["await goToLogin()"]
+    C --> D["await enterCredentials()"]
+    D --> E["await clickLogin()"]
+    E --> F[Return promise]
+```
+
+---
+
 ## MCQ — Practice Questions
 
 **Concept:** [`MCQ/Array_MCQ.md`](MCQ/Array_MCQ.md) is a growing bank of short multiple-choice questions to self-test the concepts from each chapter, starting with arrays.
@@ -2056,4 +2648,4 @@ Concept explainers, generated on demand via the prompt template in [`IQ_Notes/RE
 
 ---
 
-> **TL;DR:** This repo is a from-scratch JavaScript fundamentals course (`console.log` → scoping → identifiers → literals/numbers → operators → conditionals → switch statements → user input → loops → arrays: create, search, iterate, transform, sort, slice, combine, check, copy, destructure → functions: the four types, expressions, arrows, IIFE, spread/rest, `return`, `var`/`let`/`const`, hoisting, TDZ → scope & closures: scope chain, private state, retry trackers → strings: quotes, template literals, character access, searching) plus a `00_chaptet_GENAI` folder for LLM automation-framework prompting, an `MCQ` self-test bank, and an `IQ_Notes` library of standalone concept references anyone can regenerate with the same prompt template.
+> **TL;DR:** This repo is a from-scratch JavaScript fundamentals course (`console.log` → scoping → identifiers → literals/numbers → operators → conditionals → switch statements → user input → loops → arrays: create, search, iterate, transform, sort, slice, combine, check, copy, destructure → functions: the four types, expressions, arrows, IIFE, spread/rest, `return`, `var`/`let`/`const`, hoisting, TDZ → scope & closures: scope chain, private state, retry trackers → strings: quotes, template literals, character access, searching, extraction, transformation, splitting, joining, conversion → objects: literals, property access, mutation, nesting, methods, value vs reference) plus a `00_chaptet_GENAI` folder for LLM automation-framework prompting, an `MCQ` self-test bank, and an `IQ_Notes` library of standalone concept references anyone can regenerate with the same prompt template.
